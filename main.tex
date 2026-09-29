@@ -1,0 +1,56 @@
+% Collection of selected lecture slides.
+% Each slide is placed on its own A4 page, scaled to fit within a 7 mm margin.
+\documentclass{article}
+
+% Standard A4 paper. Lecture slides are usually landscape (16:9 / 4:3), so a
+% landscape page uses the space best. Remove `landscape` for portrait pages.
+\usepackage[a4paper, landscape, margin=0mm]{geometry}
+\usepackage{pdfpages}
+
+\newlength{\slidemargin}
+\setlength{\slidemargin}{7mm}
+
+% \slides{<file in slides/>}{<page list>}
+%   Page list uses pdfpages syntax, e.g. {3}, {1-5}, {2,4,7-9}, {-} (all).
+\newcommand{\slides}[2]{%
+  \includepdf[
+    pages={#2},
+    noautoscale,
+    width=\dimexpr\paperwidth-2\slidemargin\relax,
+    height=\dimexpr\paperheight-2\slidemargin\relax,
+    keepaspectratio,
+  ]{slides/#1}%
+}
+
+\begin{document}
+
+% ---------------------------------------------------------------------------
+% Add the slides you want below, in the order they should appear.
+% Put the lecture PDFs in the slides/ directory.
+% ---------------------------------------------------------------------------
+
+\slides{EE1D1_lec1.pdf}{38}
+\slides{EE1D1_lec1.pdf}{41-47}
+\slides{EE1D1_lec2.pdf}{12-15}
+\slides{EE1D1_lec2.pdf}{21-24}
+\slides{EE1D1_lec2.pdf}{31-32}
+\slides{EE1D1_lec3.pdf}{8-11}
+\slides{EE1D1_lec3.pdf}{18-21}
+\slides{EE1D1_lec3.pdf}{24}
+\slides{EE1D1_lec3.pdf}{29}
+\slides{EE1D1_lec3.pdf}{34}
+\slides{EE1D1_lec3.pdf}{37-38}
+\slides{EE1D1_lec4.pdf}{5}
+\slides{EE1D1_lec4.pdf}{16}
+\slides{EE1D1_lec4.pdf}{22-23}
+\slides{EE1D1_lec4.pdf}{28}
+\slides{EE1D1_lec4.pdf}{36}
+\slides{EE1D1_lec5.pdf}{6-8}
+\slides{EE1D1_lec5.pdf}{12-13}
+\slides{EE1D1_lec5.pdf}{21-23}
+\slides{EE1D1_lec5.pdf}{25}
+\slides{EE1D1_lec5.pdf}{27}
+\slides{EE1D1_lec5.pdf}{32}
+
+
+\end{document}
