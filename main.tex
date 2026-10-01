@@ -1,26 +1,55 @@
 % Collection of selected lecture slides.
-% Each slide is placed on its own A4 page, scaled to fit within a 7 mm margin.
+% Two slides are stacked on each portrait A4 page, each with a header naming
+% the lecture and slide number, within a 7 mm margin.
 \documentclass{article}
 
-% Standard A4 paper. Lecture slides are usually landscape (16:9 / 4:3), so a
-% landscape page uses the space best. Remove `landscape` for portrait pages.
-\usepackage[a4paper, landscape, margin=0mm]{geometry}
-\usepackage{pdfpages}
+\usepackage[a4paper, margin=7mm]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
 
-\newlength{\slidemargin}
-\setlength{\slidemargin}{7mm}
+\pagestyle{empty}
+\setlength{\parindent}{0pt}
+
+% Header text for a slide: "Lecture <n>" when the file name contains
+% lec<n>, otherwise the file name itself.
+\ExplSyntaxOn
+\tl_new:N \l__slides_label_tl
+\seq_new:N \l__slides_match_seq
+\cs_new_protected:Npn \__slides_set_label:n #1
+  {
+    \regex_extract_once:nnNTF { lec(\d+) } {#1} \l__slides_match_seq
+      { \tl_set:Ne \l__slides_label_tl { Lecture~\seq_item:Nn \l__slides_match_seq {2} } }
+      { \tl_set:Nn \l__slides_label_tl {#1} }
+  }
+
+% One slide: header line above the slide image, in a box half a page tall.
+\cs_new_protected:Npn \__slides_one:nn #1#2
+  {
+    \parbox[c][0.5\textheight][c]{\textwidth}
+      {
+        {\small\bfseries\color{black!70}
+          \l__slides_label_tl \hfill Slide~#2}\par
+        \vspace{1mm}\hrule\vspace{1.5mm}
+        \includegraphics[width=\textwidth, page=#2]{slides/#1}
+      }
+    \par
+  }
 
 % \slides{<file in slides/>}{<page list>}
-%   Page list uses pdfpages syntax, e.g. {3}, {1-5}, {2,4,7-9}, {-} (all).
-\newcommand{\slides}[2]{%
-  \includepdf[
-    pages={#2},
-    noautoscale,
-    width=\dimexpr\paperwidth-2\slidemargin\relax,
-    height=\dimexpr\paperheight-2\slidemargin\relax,
-    keepaspectratio,
-  ]{slides/#1}%
-}
+%   Page list is comma separated with ranges, e.g. {3}, {1-5}, {2,4,7-9}.
+\NewDocumentCommand \slides { m m }
+  {
+    \__slides_set_label:n {#1}
+    \clist_map_inline:nn {#2}
+      {
+        \seq_set_split:Nnn \l_tmpa_seq { - } {##1}
+        \int_step_inline:nnn
+          { \seq_item:Nn \l_tmpa_seq {1} }
+          { \seq_item:Nn \l_tmpa_seq {-1} }
+          { \__slides_one:nn {#1} {####1} }
+      }
+  }
+\ExplSyntaxOff
 
 \begin{document}
 
